@@ -32,6 +32,9 @@ syntax on
 " Highlight the search (*#/)
 set hlsearch
 
+" Highlight /pattern while typing
+set incsearch
+
 " Color scheme
 colorscheme alduin
 
@@ -80,16 +83,17 @@ Plugin 'junegunn/fzf.vim'
 " Git integration
 Plugin 'tpope/vim-fugitive'
 
-" Autocomplete
-" This...does not work well at all. Boo.
-" Plugin 'valloric/youcompleteme'
-
 " Status bar
 Plugin 'bling/vim-airline'
 
 " Git status bar
 Plugin 'airblade/vim-gitgutter'
 
+" Golang stuff
+Plugin 'fatih/vim-go'
+
+" Wrap stuff more easily
+Plugin 'tpope/vim-surround'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
