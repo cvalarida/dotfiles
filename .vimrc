@@ -95,6 +95,9 @@ Plugin 'fatih/vim-go'
 " Wrap stuff more easily
 Plugin 'tpope/vim-surround'
 
+" Auto-close things like ),},], etc.
+Plugin 'raimondi/delimitmate'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -141,13 +144,24 @@ let g:ale_fixers = {
 
 let g:ale_fix_on_save = 1
 
+" When we enter {} (and friend), then hit enter, it expands them like I want
+" it to
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_expand_space = 1
+
 """" Remap keys """"
 
-" Swap pains without control+<direction>
+" Swap splits with control+<direction>
 nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k
 nnoremap <C-L> <C-W>l
 nnoremap <C-H> <C-W>h
+
+" Resize splits (not sure if I'm too fond of these yet)
+nnoremap <leader>- <C-W>-
+nnoremap <leader>+ <C-W>+
+nnoremap <leader>< <C-W><
+nnoremap <leader>> <C-W>>
 
 " ;l = escape because it's fast and doesn't interfere with ending lines in ;
 inoremap ;l <Esc>
@@ -159,6 +173,10 @@ nnoremap [e :ALEPreviousWrap<Return>
 
 " Copy to clipboard
 vnoremap <Leader>y "+y
+
+" Paste with context -- alternative to https://github.com/sickill/vim-pasta
+nnoremap <leader>p p`[v`]=
+nnoremap <leader>P P`[v`]=
 
 """" Define new commands """"
 
@@ -196,3 +214,19 @@ command! -bang -nargs=* Rg
 
 nnoremap <silent> <leader>g :Rg
 
+" \zj \zk to jump to next and previous closed folds
+nnoremap <silent> <leader>zj :call NextClosedFold('j')<cr>
+nnoremap <silent> <leader>zk :call NextClosedFold('k')<cr>
+function! NextClosedFold(dir)
+    let cmd = 'norm!z' . a:dir
+    let view = winsaveview()
+    let [l0, l, open] = [0, view.lnum, 1]
+    while l != l0 && open
+        exe cmd
+        let [l0, l] = [l, line('.')]
+        let open = foldclosed(l) < 0
+    endwhile
+    if open
+        call winrestview(view)
+    endif
+endfunction
