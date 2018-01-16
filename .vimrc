@@ -24,10 +24,7 @@ set mouse=a
 " backspace over auto-indents, eols, start of lines
 set backspace=indent,eol,start
 
-"""" END BILL'S MAGIC CONFIG """"
-
 set number
-syntax on
 
 " Highlight the search (*#/)
 set hlsearch
@@ -56,6 +53,10 @@ set smartcase
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+
+" Add fzf to the runtime path
+set rtp+=~/.fzf
+
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
@@ -113,6 +114,8 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
+" Now that we have jsx highlighting, turn syntax on
+syntax on
 
 """" Plugin settings """"
 
@@ -180,6 +183,17 @@ nnoremap <leader>P P`[v`]=
 
 """" Define new commands """"
 
+"tab autocompletes
+function! InsertTabWrapper()
+      let col = col('.') - 1
+      if !col || getline('.')[col - 1] !~ '\k'
+          return "\<tab>"
+      else
+          return "\<c-p>"
+      endif
+endfunction 
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+
 " :Find
 " --column: Show column number
 " --line-number: Show line number
@@ -193,26 +207,15 @@ nnoremap <leader>P P`[v`]=
 " --color: Search color options
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!.node_modules/" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
-"tab autocompletes
-function! InsertTabWrapper()
-      let col = col('.') - 1
-      if !col || getline('.')[col - 1] !~ '\k'
-          return "\<tab>"
-      else
-          return "\<c-p>"
-      endif
-endfunction 
-inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-
-" \g to fzf (won't work until ripgrep is installed)
+" \g to fzf
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   'rg --column --line-number --no-heading --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!.node_modules/" --color "always" '.shellescape(<q-args>), 1,
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-nnoremap <silent> <leader>g :Rg
+nnoremap <silent> <leader>g :Rg<cr>
 
 " \zj \zk to jump to next and previous closed folds
 nnoremap <silent> <leader>zj :call NextClosedFold('j')<cr>
