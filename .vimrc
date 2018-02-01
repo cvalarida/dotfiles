@@ -24,7 +24,14 @@ set mouse=a
 " backspace over auto-indents, eols, start of lines
 set backspace=indent,eol,start
 
-set number
+set number relativenumber
+
+" Use relative numbers for the active window, absolute for inactive
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
 
 " Highlight the search (*#/)
 set hlsearch
@@ -85,7 +92,8 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'tpope/vim-fugitive'
 
 " Status bar
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 " Git status bar
 Plugin 'airblade/vim-gitgutter'
@@ -147,10 +155,13 @@ let g:ale_fixers = {
 
 let g:ale_fix_on_save = 1
 
-" When we enter {} (and friend), then hit enter, it expands them like I want
+" When we enter {} (and friends), then hit enter, it expands them like I want
 " it to
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
+
+" Airline theme to match colorscheme
+let g:airline_theme='alduin'
 
 """" Remap keys """"
 
@@ -207,15 +218,22 @@ inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 " --color: Search color options
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!.node_modules/" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
-" \g to fzf
+" \f to fzf
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!.node_modules/" --color "always" '.shellescape(<q-args>), 1,
+  \   'rg --column --line-number --no-heading --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!node_modules/" --color "always" '.shellescape(<q-args>), 1,
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-nnoremap <silent> <leader>g :Rg<cr>
+" Find in files
+nnoremap <silent> <leader>f :Rg<cr>
+
+" Search for file name
+nnoremap <silent> <leader>g :Files<cr>
+
+" Open interactive buffer list
+nnoremap <silent> <leader>b :Buffers<cr>
 
 " \zj \zk to jump to next and previous closed folds
 nnoremap <silent> <leader>zj :call NextClosedFold('j')<cr>
