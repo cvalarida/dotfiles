@@ -154,6 +154,9 @@ let g:ale_fixers = {
 \}
 
 let g:ale_fix_on_save = 1
+" Without the following line, ale was swallowing my cursor mysteriously
+" I don't know _why_ this works or if it'll mess anything else up, so YMMV
+let g:ale_echo_cursor = 0
 
 " When we enter {} (and friends), then hit enter, it expands them like I want
 " it to
