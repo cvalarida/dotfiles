@@ -188,12 +188,25 @@ vnoremap ;l <Esc>
 nnoremap ]e :ALENextWrap<Return>
 nnoremap [e :ALEPreviousWrap<Return>
 
+" Unfortunately, with g:ale_echo_cursor = 0, linting error text isn't displayed,
+" so the following command can be used to open up a new split with the details.
+" Don't forget `q` closes (no `:` necessary)
+nnoremap <leader>d :ALEDetail<Return>
+
 " Copy to clipboard
 vnoremap <Leader>y "+y
 
 " Paste with context -- alternative to https://github.com/sickill/vim-pasta
 nnoremap <leader>p p`[v`]=
 nnoremap <leader>P P`[v`]=
+
+" Format whole json file with jq
+" TODO: Figure out how to only apply this to the line the cursor is on
+nnoremap <leader>pj :%!jq '.'<Return>
+
+" Open path in vertical split
+nnoremap <C-W><C-F> <C-W>vgf
+
 
 """" Define new commands """"
 
@@ -254,3 +267,35 @@ function! NextClosedFold(dir)
         call winrestview(view)
     endif
 endfunction
+
+
+" camelCase <-> snake_case converter
+function! ConvertVariableCase()
+  " Find the word under the cursor
+  let l:word = expand("<cword>")
+
+  " Change the case
+  if l:word =~ '_'
+    " The word is snake_case
+    let l:sub = substitute(l:word, '_\([a-z]\)', '\=toupper(submatch(1))', 'g')
+  else
+    " The word is camelCase
+    let l:sub = substitute(l:word, '\C\([A-Z]\{1\}\)',
+          \ {m -> '_' . tolower(m[1])}, 'g')
+  endif
+
+  " Substitute the current word for the new one
+  "  (without mangling the registers)
+  let l:saved_clipboard = &clipboard
+  silent set clipboard "
+  let l:saved_reg = getreg('"')
+  let l:saved_reg_type = getregtype('"')
+  call setreg('"', l:sub)
+  " And finally, replace!
+  normal! viwp
+  " Clean up the registers
+  call setreg('"', l:saved_reg, l:saved_reg_type)
+  let &clipboard = l:saved_clipboard
+endfunction
+
+nnoremap <silent> <leader>c :call ConvertVariableCase()<Return>
