@@ -24,6 +24,11 @@ set mouse=a
 " backspace over auto-indents, eols, start of lines
 set backspace=indent,eol,start
 
+" turn off swap files
+set nobackup
+set nowritebackup
+set noswapfile
+
 set number relativenumber
 
 " Use relative numbers for the active window, absolute for inactive
@@ -56,7 +61,6 @@ set smartcase
 
 
 """" Vundle config """"
-
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -107,6 +111,9 @@ Plugin 'tpope/vim-surround'
 " Auto-close things like ),},], etc.
 Plugin 'raimondi/delimitmate'
 
+" Vim wiki
+Plugin 'vimwiki/vimwiki'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -124,6 +131,7 @@ filetype plugin indent on    " required
 
 " Now that we have jsx highlighting, turn syntax on
 syntax on
+
 
 """" Plugin settings """"
 
@@ -166,6 +174,7 @@ let g:delimitMate_expand_space = 1
 " Airline theme to match colorscheme
 let g:airline_theme='alduin'
 
+
 """" Remap keys """"
 
 " Swap splits with control+<direction>
@@ -207,6 +216,9 @@ nnoremap <leader>pj :%!jq '.'<Return>
 " Open path in vertical split
 nnoremap <C-W><C-F> <C-W>vgf
 
+" Copy whole file to clipboard
+nnoremap <leader>a gg"+yG''
+
 
 """" Define new commands """"
 
@@ -232,12 +244,12 @@ inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 " --follow: Follow symlinks
 " --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 " --color: Search color options
-command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!.node_modules/" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!node_modules/*" --glob "!.babelcache/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
 " \f to fzf
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!node_modules/" --color "always" '.shellescape(<q-args>), 1,
+  \   'rg --column --line-number --no-heading --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!node_modules/*" --glob "!.babelcache/*" --color "always" '.shellescape(<q-args>), 1,
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
@@ -299,3 +311,13 @@ function! ConvertVariableCase()
 endfunction
 
 nnoremap <silent> <leader>c :call ConvertVariableCase()<Return>
+
+
+" Copy file path to clipboard
+function! CopyPathToClipboard()
+  let @+ = expand("%")
+  echo "Copied path to clipboard:" @+
+endfunction
+
+nnoremap <silent> <leader><C-G> :call CopyPathToClipboard()<Return>
+
