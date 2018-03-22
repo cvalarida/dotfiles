@@ -223,7 +223,9 @@ nnoremap <C-W><C-F> <C-W>vgf
 nnoremap <leader>a gg"+yG''
 
 " Delete previous word
-inoremap <C-BS> <C-W>
+" TODO: Figure out why this doesn't work
+" http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
+inoremap <C-BS> <C-w>
 
 
 """" Define new commands """"
