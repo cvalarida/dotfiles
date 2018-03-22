@@ -156,6 +156,9 @@ let NERDTreeDirArrows = 1
 " Show hidden files in NERDTree by default
 let NERDTreeShowHidden = 1
 
+" Enable airline tabline
+let g:airline#extensions#tabline#enabled = 1
+
 " ALE (linter) fix problems on save
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
@@ -171,8 +174,8 @@ let g:ale_echo_cursor = 0
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
 
-" Airline theme to match colorscheme
-let g:airline_theme='alduin'
+" Airline theme
+let g:airline_theme='badwolf'
 
 
 """" Remap keys """"
@@ -218,6 +221,9 @@ nnoremap <C-W><C-F> <C-W>vgf
 
 " Copy whole file to clipboard
 nnoremap <leader>a gg"+yG''
+
+" Delete previous word
+inoremap <C-BS> <C-W>
 
 
 """" Define new commands """"
