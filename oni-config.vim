@@ -44,13 +44,6 @@ set hlsearch
 " Highlight /pattern while typing
 set incsearch
 
-" Color scheme
-colorscheme alduin
-
-" Change color scheme based on time of day / night (only works after this file
-" has been sourced...boo...
-let g:alduin_Contract_Vampirism = 1
-
 " Split to the right and below by default
 set splitright
 set splitbelow
@@ -59,17 +52,14 @@ set splitbelow
 set ignorecase
 set smartcase
 
-" Oni-only options
-if exists('g:gui_oni')
-  " Turn off statusbar, because it is externalized
-  set noshowmode
-  set noruler
-  set laststatus=0
-  set noshowcmd
+" Turn off statusbar, because it is externalized
+set noshowmode
+set noruler
+set laststatus=0
+set noshowcmd
 
-  set list
-  set listchars=trail:·
-endif
+set list
+set listchars=trail:·
 
 
 """" Vundle config """"
@@ -87,72 +77,41 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" Non-Oni plugins
-if !exists('g:gui_oni')
-  " NERDtree
-  Plugin 'scrooloose/nerdtree'
-  " Make NERDTree prettier
-  let NERDTreeMinimalUI = 1
-  let NERDTreeDirArrows = 1
-  " Show hidden files in NERDTree by default
-  let NERDTreeShowHidden = 1
-  " Toggle NERDTree with \\
-  nnoremap <Leader>\ :NERDTreeToggle<Enter>
+" NERDtree
+" Plugin 'scrooloose/nerdtree'
 
-  " Javascript highlighting
-  Plugin 'pangloss/vim-javascript'
-
-  " Linting
-  Plugin 'w0rp/ale'
-  " ALE (linter) fix problems on save
-  let g:ale_fixers = {
-        \   'javascript': ['eslint'],
-        \}
-
-  let g:ale_fix_on_save = 1
-  " Without the following line, ale was swallowing my cursor mysteriously
-  " I don't know _why_ this works or if it'll mess anything else up, so YMMV
-  let g:ale_echo_cursor = 0
-
-  " Git integration
-  Plugin 'tpope/vim-fugitive'
-
-  " Status bar
-  Plugin 'vim-airline/vim-airline'
-  Plugin 'vim-airline/vim-airline-themes'
-  " Enable airline tabline
-  let g:airline#extensions#tabline#enabled = 1
-  let g:airline_theme='badwolf'
-
-  " Auto-close things like ),},], etc.
-  Plugin 'raimondi/delimitmate'
-  " When we enter {} (and friends), then hit enter, it expands them like I want
-  " it to
-  let g:delimitMate_expand_cr = 1
-  let g:delimitMate_expand_space = 1
-endif
-
-" Color scheme
-Plugin 'AlessandroYorba/Alduin'
+" Javascript highlighting
+" Plugin 'pangloss/vim-javascript'
 
 " JSX highlighting 
-Plugin 'mxw/vim-jsx'
+" Plugin 'mxw/vim-jsx'
 
+" Linting
+" Plugin 'w0rp/ale'
 
 " Fuzzy find files
 " NOTE: ripgrep is needed for this: https://github.com/BurntSushi/ripgrep
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 
+" Git integration
+" Plugin 'tpope/vim-fugitive'
+
+" Status bar
+" Plugin 'vim-airline/vim-airline'
+" Plugin 'vim-airline/vim-airline-themes'
 
 " Git status bar
-Plugin 'airblade/vim-gitgutter'
+" Plugin 'airblade/vim-gitgutter'
 
 " Golang stuff
-Plugin 'fatih/vim-go'
+" Plugin 'fatih/vim-go'
 
 " Wrap stuff more easily
 Plugin 'tpope/vim-surround'
+
+" Auto-close things like ),},], etc.
+" Plugin 'raimondi/delimitmate'
 
 " Vim wiki
 Plugin 'vimwiki/vimwiki'
@@ -176,6 +135,48 @@ filetype plugin indent on    " required
 syntax on
 
 
+"""" Plugin settings """"
+
+" Open NERDTree when vim is started with no options
+" Commented out because opening vim with no options gave me an error and I
+" don't know why
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists(“s:std_in”) | NERDTree | endif
+
+" Close a tab if NERDTree is the only window left
+" Commented out because closing NERDTree was giving me an error and I don't
+" know why
+" autocmd bufenter * if (winnr(“$”) == 1 && exists(“b:NERDTreeType”) && b:NERDTreeType == “primary”) | q | endif
+
+" Make NERDTree prettier
+" let NERDTreeMinimalUI = 1
+" let NERDTreeDirArrows = 1
+
+" Show hidden files in NERDTree by default
+" let NERDTreeShowHidden = 1
+
+" Enable airline tabline
+" let g:airline#extensions#tabline#enabled = 1
+
+" ALE (linter) fix problems on save
+" let g:ale_fixers = {
+" \   'javascript': ['eslint'],
+" \}
+
+" let g:ale_fix_on_save = 1
+" Without the following line, ale was swallowing my cursor mysteriously
+" I don't know _why_ this works or if it'll mess anything else up, so YMMV
+" let g:ale_echo_cursor = 0
+
+" When we enter {} (and friends), then hit enter, it expands them like I want
+" it to
+" let g:delimitMate_expand_cr = 1
+" let g:delimitMate_expand_space = 1
+
+" Airline theme
+" let g:airline_theme='badwolf'
+
+
 """" Remap keys """"
 
 " Swap splits with control+<direction>
@@ -188,19 +189,14 @@ nnoremap <C-H> <C-W>h
 inoremap ;l <Esc>
 vnoremap ;l <Esc>
 
-if !exists('g:gui_oni')
-  " Go to linting errors
-  nnoremap ]e :ALENextWrap<Return>
-  nnoremap [e :ALEPreviousWrap<Return>
+" Go to linting errors
+" nnoremap ]e :ALENextWrap<Return>
+" nnoremap [e :ALEPreviousWrap<Return>
 
-  " Unfortunately, with g:ale_echo_cursor = 0, linting error text isn't displayed,
-  " so the following command can be used to open up a new split with the details.
-  " Don't forget `q` closes (no `:` necessary)
-  nnoremap <leader>d :ALEDetail<Return>
-else
-  " Toggle Oni sidebar
-  nnoremap <silent> <leader>\ :call OniCommand('sidebar.toggle')<cr>
-endif
+" Unfortunately, with g:ale_echo_cursor = 0, linting error text isn't displayed,
+" so the following command can be used to open up a new split with the details.
+" Don't forget `q` closes (no `:` necessary)
+" nnoremap <leader>d :ALEDetail<Return>
 
 " Copy to clipboard
 vnoremap <Leader>y "+y
@@ -223,6 +219,9 @@ nnoremap <leader>a gg"+yG''
 " TODO: Figure out why this doesn't work
 " http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 inoremap <C-BS> <C-w>
+
+" Toggle Oni sidebar
+nnoremap <silent> <leader>\ :call OniCommand('sidebar.toggle')<cr>
 
 
 """" Define new commands """"
