@@ -99,9 +99,6 @@ if !exists('g:gui_oni')
   " Toggle NERDTree with \\
   nnoremap <Leader>\ :NERDTreeToggle<Enter>
 
-  " Javascript highlighting
-  Plugin 'pangloss/vim-javascript'
-
   " Linting
   Plugin 'w0rp/ale'
   " ALE (linter) fix problems on save
@@ -135,6 +132,9 @@ endif
 " Color scheme
 Plugin 'AlessandroYorba/Alduin'
 
+" Javascript highlighting
+Plugin 'pangloss/vim-javascript'
+
 " JSX highlighting 
 Plugin 'mxw/vim-jsx'
 
@@ -156,6 +156,8 @@ Plugin 'tpope/vim-surround'
 
 " Vim wiki
 Plugin 'vimwiki/vimwiki'
+" Vim wiki settings found in ~/.vim/ftplugins/vimwiki.vim
+" TODO: Add this to the setup script
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -223,6 +225,14 @@ nnoremap <leader>a gg"+yG''
 " TODO: Figure out why this doesn't work
 " http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 inoremap <C-BS> <C-w>
+
+" Go directly to certain tabs
+for tabNum in [1, 2, 3, 4, 5, 6, 7, 8]
+  " Couldn't get <C-1> etc. to work; using <leader> instead
+  execute "nnoremap <leader>" . tabNum . " " . tabNum . "gt"
+endfor
+" Go to last tab
+nnoremap <silent> <leader>9 :tablast<Return>
 
 
 """" Define new commands """"
