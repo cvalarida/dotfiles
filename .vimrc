@@ -144,6 +144,9 @@ syntax on
 " Toggle NERDTree with \\
 nnoremap <Leader>\ :NERDTreeToggle<Enter>
 
+" Reveal current file in NERDTree
+nnoremap <Leader>t :NERDTreeFind %<Enter>
+
 " Close a tab if NERDTree is the only window left
 " Commented out because closing NERDTree was giving me an error and I don't
 " know why
@@ -328,6 +331,7 @@ function! CopyPathToClipboard()
 endfunction
 
 nnoremap <silent> <leader><C-G> :call CopyPathToClipboard()<Return>
+
 
 " Go directly to certain tabs
 for tabNum in [1, 2, 3, 4, 5, 6, 7, 8]
