@@ -329,3 +329,10 @@ endfunction
 
 nnoremap <silent> <leader><C-G> :call CopyPathToClipboard()<Return>
 
+" Go directly to certain tabs
+for tabNum in [1, 2, 3, 4, 5, 6, 7, 8]
+  " Couldn't get <C-1> etc. to work; using <leader> instead
+  execute "nnoremap <leader>" . tabNum . " " . tabNum . "gt"
+endfor
+" Go to last tab
+nnoremap <silent> <leader>9 :tablast<Return>
