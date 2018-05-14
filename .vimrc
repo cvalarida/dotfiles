@@ -230,9 +230,8 @@ nnoremap <leader>a gg"+yG''
 " http://vim.wikia.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 inoremap <C-BS> <C-w>
 
-" Navigate through buffer history
-nnoremap <silent> <M-Left> :bprevious<Return>
-nnoremap <silent> <M-Right> :bnext<Return>
+" Open previously-viewed buffer
+nnoremap <silent> <M-Left> :b #<Return>
 
 
 """" Define new commands """"
