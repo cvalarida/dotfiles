@@ -217,7 +217,7 @@ nnoremap <leader>P P`[v`]=
 
 " Format whole json file with jq
 " TODO: Figure out how to only apply this to the line the cursor is on
-nnoremap <leader>pj :%!jq '.'<Return>
+nnoremap <leader>j :%!jq '.'<Return>
 
 " Open path in vertical split
 nnoremap <C-W><C-F> <C-W>vgf
