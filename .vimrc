@@ -15,9 +15,6 @@ set softtabstop=2
 set foldmethod=indent
 set foldlevel=9999
 
-" use dark themes
-set background=dark
-
 " use the mouse in terminal mode
 set mouse=a
 
@@ -44,13 +41,6 @@ set hlsearch
 " Highlight /pattern while typing
 set incsearch
 
-" Color scheme
-colorscheme alduin
-
-" Change color scheme based on time of day / night (only works after this file
-" has been sourced...boo...
-let g:alduin_Contract_Vampirism = 1
-
 " Split to the right and below by default
 set splitright
 set splitbelow
@@ -60,78 +50,85 @@ set ignorecase
 set smartcase
 
 
-"""" Vundle config """"
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
+"""" Plug config """"
 
 " Add fzf to the runtime path
 set rtp+=~/.fzf
 
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
 " NERDtree
-Plugin 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree'
 
 " Javascript highlighting
-Plugin 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript'
 
 " JSX highlighting 
-Plugin 'mxw/vim-jsx'
+Plug 'mxw/vim-jsx'
 
 " Linting
-Plugin 'w0rp/ale'
+Plug 'w0rp/ale'
 
 " Fuzzy find files
 " NOTE: ripgrep is needed for this: https://github.com/BurntSushi/ripgrep
-Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plugin 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " Git integration
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 
 " Status bar
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " Git status bar
-Plugin 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 
 " Golang stuff
-Plugin 'fatih/vim-go'
+Plug 'fatih/vim-go'
 
 " Wrap stuff more easily
-Plugin 'tpope/vim-surround'
+Plug 'tpope/vim-surround'
 
 " Auto-close things like ),},], etc.
-Plugin 'raimondi/delimitmate'
+Plug 'raimondi/delimitmate'
 
 " Vim wiki
-Plugin 'vimwiki/vimwiki'
+Plug 'vimwiki/vimwiki'
+
+" Color scheme
+Plug 'morhetz/gruvbox'
+
+" Window swap
+Plug 'https://github.com/wesQ3/vim-windowswap'
+
+" Language server
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }
+
+" Autocomplete
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+call plug#end()            " required
 
 " Now that we have jsx highlighting, turn syntax on
 syntax on
 
+" use dark themes
+set background=dark
+
+colorscheme gruvbox
 
 """" Plugin settings """"
 
@@ -163,14 +160,14 @@ let NERDTreeShowHidden = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " ALE (linter) fix problems on save
-let g:ale_fixers = {
-\   'javascript': ['eslint'],
-\}
+" let g:ale_fixers = {
+" \   'javascript': ['eslint'],
+" \}
 
 let g:ale_fix_on_save = 1
 " Without the following line, ale was swallowing my cursor mysteriously
 " I don't know _why_ this works or if it'll mess anything else up, so YMMV
-let g:ale_echo_cursor = 0
+" let g:ale_echo_cursor = 0
 
 " When we enter {} (and friends), then hit enter, it expands them like I want
 " it to
@@ -180,6 +177,36 @@ let g:delimitMate_expand_space = 1
 " Airline theme
 let g:airline_theme='badwolf'
 
+" Vim wiki and windowswap share <leader>ww so let's remap windowswap
+let g:windowswap_map_keys=0
+nnoremap <silent> <leader>sw :call WindowSwap#EasyWindowSwap()<Return>
+
+" Language server settings
+" The javascript language server will need to be installed first:
+" yarn global add javascript-typescript-langserver
+" https://fortes.com/2017/language-server-neovim/
+" let g:LanguageClient_serverCommands = {
+"     \ 'javascript': ['javascript-typescript-stdio'],
+"     \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+"     \ }
+
+" Minimal LanguageServer Protocol configuration for JavaScript
+let g:LanguageClient_autoStart = 0
+let g:LanguageClient_serverCommands = {}
+if executable('javascript-typescript-stdio')
+  " let g:LanguageClient_serverCommands.javascript = ['javascript-typescript-stdio']
+  " Hopefully this jsx works...
+  let g:LanguageClient_serverCommands = {
+        \ 'javascript': ['javascript-typescript-stdio'],
+        \ 'javascript.jsx': ['javascript-typescript-stdio'],
+        \ }
+    let g:LanguageClient_rootMarkers = { 'javascript': ['project.json'] }
+  " Use LanguageServer for omnifunc completion
+  autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
+else
+  echo "javascript-typescript-stdio not installed!\n"
+  :cq
+endif
 
 """" Remap keys """"
 
@@ -231,19 +258,36 @@ nnoremap <leader>a gg"+yG''
 inoremap <C-BS> <C-w>
 
 " Open previously-viewed buffer
+" This is sometimes more useful than <c-o> and <c-i> to navigate the jumplist
 nnoremap <silent> <M-Left> :b #<Return>
 
+" LanguageServer commands
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<Return>
+nnoremap <silent> <leader>gd :call LanguageClient#textDocument_definition()<Return>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<Return>
+nnoremap <silent> <leader>r :call LanguageClient#textDocument_references()<Return>
+
+" Get outa terminal!
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
 
 """" Define new commands """"
 
 "tab autocompletes
 function! InsertTabWrapper()
-      let col = col('.') - 1
-      if !col || getline('.')[col - 1] !~ '\k'
-          return "\<tab>"
-      else
-          return "\<c-p>"
-      endif
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    " We're trying out Deoplete with LanguageClient for autocompleting
+    if exists('l:omnifunc')
+      return "\<c-x>\<c-o>"
+    else
+      return "\<c-p>"
+    endif
+  endif
 endfunction 
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 
@@ -343,3 +387,32 @@ for tabNum in [1, 2, 3, 4, 5, 6, 7, 8]
 endfor
 " Go to last tab
 nnoremap <silent> <leader>9 :tablast<Return>
+
+
+" This is a work in progress! It currently doesn't work even a little bit.
+" Search in files that have changed on this branch
+" Depends on the alias `git files`
+function! BranchGrep(...)
+  " Check to see if we have an argument we're searching for
+  if a:000 == []
+    echo "Please specify a search parameter"
+    return
+  endif
+  " Check to see if we have any files that are different in this branch
+  " TODO: There's got to be a better way to get the output of a command than this...
+  redir => raw_output
+  execute '!git files'
+  redir END
+
+  " Find the file names
+  " Start by making the string a list so we can remove some lines
+  let list_output = split(raw_output, "/\n")
+  echo 'List output:'
+  echo list_output
+  " Abort if we don't have any files that have changed
+  " Append our search params
+  " Call :grep with the search arguments, searching in the changed files
+  " call(grep, search_params)
+endfunction
+
+command! Bgrep call BranchGrep(<args>)
