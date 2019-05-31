@@ -61,16 +61,6 @@ There are two things you can do about this warning:
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 
-;; Make the mode line less obnoxious
-;; NOTE: Diminishing should be happening in the use-package calls where possible
-(require 'diminish)
-(add-hook 'undo-tree-mode-hook #'(lambda () (diminish 'undo-tree-mode)))
-(add-hook 'auto-revert-mode-hook #'(lambda () (diminish 'auto-revert-mode)))
-(add-hook 'flymake-mode-hook #'(lambda () (diminish 'flymake-mode)))
-(add-hook 'eldoc-mode-hook #'(lambda () (diminish 'eldoc-mode)))
-(add-hook 'yas-minor-mode-hook #'(lambda () (diminish 'yas-minor-mode)))
-(add-hook 'hs-minor-mode-hook #'(lambda () (diminish 'hs-minor-mode)))
-
 ;; Set up key bindings for mode maps that aren't a part of a package.
 (defun set-up-org-mode-map ()
   "Set up org mode key maps."
@@ -101,8 +91,23 @@ There are two things you can do about this warning:
       (error "Buffer not visiting a file"))))
 
 ;; Set up use-package
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
+
+;; Make the mode line less obnoxious
+;; NOTE: Diminishing should be happening in the use-package calls where possible
+(use-package diminish
+  :ensure t
+  :config
+  (add-hook 'undo-tree-mode-hook #'(lambda () (diminish 'undo-tree-mode)))
+  (add-hook 'auto-revert-mode-hook #'(lambda () (diminish 'auto-revert-mode)))
+  (add-hook 'flymake-mode-hook #'(lambda () (diminish 'flymake-mode)))
+  (add-hook 'eldoc-mode-hook #'(lambda () (diminish 'eldoc-mode)))
+  (add-hook 'yas-minor-mode-hook #'(lambda () (diminish 'yas-minor-mode)))
+  (add-hook 'hs-minor-mode-hook #'(lambda () (diminish 'hs-minor-mode))))
 
 ;; Install some packages!
 (use-package which-key
