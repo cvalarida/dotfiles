@@ -36,10 +36,10 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("04232a0bfc50eac64c12471607090ecac9d7fd2d79e388f8543d1c5439ed81f5" default)))
+    ("54f2d1fcc9bcadedd50398697618f7c34aceb9966a6cbaa99829eb64c0c1f3ca" "04232a0bfc50eac64c12471607090ecac9d7fd2d79e388f8543d1c5439ed81f5" default)))
  '(package-selected-packages
    (quote
-    (ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
+    (add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -216,18 +216,6 @@ There are two things you can do about this warning:
   :diminish flycheck-mode
   :init
   (global-flycheck-mode)
-  ;; use local eslint from node_modules before global
-  ;; http://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable
-  (defun my/use-eslint-from-node-modules ()
-    (let* ((root (locate-dominating-file
-		  (or (buffer-file-name) default-directory)
-		  "node_modules"))
-	   (eslint (and root
-			(expand-file-name "node_modules/eslint/bin/eslint.js"
-					  root))))
-      (when (and eslint (file-executable-p eslint))
-	(setq-local flycheck-javascript-eslint-executable eslint))))
-  (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
   :config
   (which-key-add-key-based-replacements "SPC e" "flycheck")
   (define-key evil-normal-state-map (kbd "SPC e") flycheck-command-map)
@@ -301,6 +289,12 @@ There are two things you can do about this warning:
   :ensure t)
 
 ;; Packages that add hooks to major modes
+(use-package add-node-modules-path
+  :ensure t
+  :init
+  (dolist (hook '(js2-mode-hook rjsx-mode-hook))
+    (add-hook hook #'add-node-modules-path)))
+
 (use-package prettier-js
   :ensure t
   :diminish prettier-js-mode
