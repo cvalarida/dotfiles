@@ -39,7 +39,7 @@ There are two things you can do about this warning:
     ("54f2d1fcc9bcadedd50398697618f7c34aceb9966a6cbaa99829eb64c0c1f3ca" "04232a0bfc50eac64c12471607090ecac9d7fd2d79e388f8543d1c5439ed81f5" default)))
  '(package-selected-packages
    (quote
-    (add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
+    (groovy-mode git-link yaml-mode go-mode typescript-mode add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -155,6 +155,11 @@ There are two things you can do about this warning:
   (define-key evil-normal-state-map (kbd "SPC g s") 'magit)
   (define-key evil-normal-state-map (kbd "SPC g b") 'magit-blame))
 
+(use-package git-link
+  :ensure t
+  :config
+  (setq git-link-default-branch "master"))
+
 (use-package evil-surround
   :ensure t
   :config
@@ -250,6 +255,13 @@ There are two things you can do about this warning:
   (eyebrowse-setup-evil-keys)
   (eyebrowse-mode))
 
+(use-package winner
+  :ensure t
+  :config
+  ;; Return to previous window configuration ("hacky")
+  (winner-mode)
+  (add-hook 'ediff-after-quit-hook-internal 'winner-undo))
+
 (use-package ace-window
   :ensure t
   :init
@@ -288,6 +300,18 @@ There are two things you can do about this warning:
 (use-package rjsx-mode
   :ensure t)
 
+(use-package typescript-mode
+  :ensure t)
+
+(use-package go-mode
+  :ensure t)
+
+(use-package yaml-mode
+  :ensure t)
+
+(use-package groovy-mode
+  :ensure t)
+
 ;; Packages that add hooks to major modes
 (use-package add-node-modules-path
   :ensure t
@@ -308,7 +332,7 @@ There are two things you can do about this warning:
   :diminish lsp-mode "LSP"
   :init
   ;; Can't use :hook here because that'll run `lsp-mode`, not `lsp`
-  (dolist (hook '(js2-mode-hook rjsx-mode-hook))
+  (dolist (hook '(js2-mode-hook rjsx-mode-hook typescript-mode-hook))
     (add-hook hook #'lsp))
   (add-hook 'lsp-mode-hook #'(lambda ()
 			       (define-key evil-normal-state-map (kbd "SPC g d") 'lsp-find-implementation)
