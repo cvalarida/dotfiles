@@ -218,7 +218,7 @@ There are two things you can do about this warning:
   :config
   (which-key-add-key-based-replacements "SPC p" "project")
   (define-key evil-normal-state-map (kbd "SPC p f") 'helm-projectile)
-  (define-key evil-normal-state-map (kbd "SPC p /") 'helm-projectile-rg)
+  (define-key evil-normal-state-map (kbd "SPC /") 'helm-projectile-rg)
   (helm-projectile-on))
 
 (use-package dimmer
