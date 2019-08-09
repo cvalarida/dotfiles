@@ -90,6 +90,26 @@ There are two things you can do about this warning:
           (kill-new file-name))
       (error "Buffer not visiting a file"))))
 
+;; Configure ediff
+;; From https://oremacs.com/2015/01/17/setting-up-ediff/
+(defmacro csetq (variable value)
+  "Variant of 'setq', but aware of the 'custom-set' property of VARIABLE.  Set VARIABLE to VALUE."
+  `(funcall (or (get ',variable 'custom-set)
+                'set-default)
+            ',variable ,value))
+;; Keep instructions in the same frame
+(csetq ediff-window-setup-function 'ediff-setup-windows-plain)
+;; Split horizontally to see changes more easily
+(csetq ediff-split-window-function 'split-window-horizontally)
+;; Ignore whitespace
+;; (csetq ediff-diff-options "-w")
+;; Keybindings
+(defun ediff-setup-hook ()
+  (ediff-setup-keymap)
+  (define-key ediff-mode-map "j" 'ediff-next-difference)
+  (define-key ediff-mode-map "k" 'ediff-previous-difference))
+(add-hook 'ediff-mode-hook 'ediff-setup-hook)
+
 ;; Set up use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
