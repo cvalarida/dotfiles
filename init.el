@@ -110,6 +110,20 @@ There are two things you can do about this warning:
   (define-key ediff-mode-map "k" 'ediff-previous-difference))
 (add-hook 'ediff-mode-hook 'ediff-setup-hook)
 
+;; Toggle window dedication
+
+;; From https://stackoverflow.com/questions/43765/pin-emacs-buffers-to-windows-for-cscope
+(defun toggle-window-dedicated ()
+  "Toggle whether the current active window is dedicated or not."
+  (interactive)
+  (message
+   (if (let (window (get-buffer-window (current-buffer)))
+	 (set-window-dedicated-p window
+				 (not (window-dedicated-p window))))
+       "Window '%s' is dedicated"
+     "Window '%s' is normal")
+   (current-buffer)))
+
 ;; Set up use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -157,8 +171,9 @@ There are two things you can do about this warning:
   (define-key evil-normal-state-map (kbd "SPC b d") 'evil-delete-buffer)
   (define-key evil-normal-state-map (kbd "SPC w") evil-window-map)
   (which-key-add-key-based-replacements "SPC w" "window")
-  (define-key evil-normal-state-map (kbd "SPC w /") 'evil-window-vsplit)
-  (define-key evil-normal-state-map (kbd "SPC w -") 'evil-window-split)
+  (define-key evil-normal-state-map (kbd "SPC w /") 'evil-window-vsplit) ;; Necessary?
+  (define-key evil-normal-state-map (kbd "SPC w -") 'evil-window-split) ;; Necessary?
+  (define-key evil-normal-state-map (kbd "SPC w d") 'toggle-window-dedicated)
   (which-key-add-key-based-replacements "SCP f" "files")
   (define-key evil-normal-state-map (kbd "SPC f f") 'helm-find-files)
   (define-key evil-normal-state-map (kbd "SPC f y") 'yank-buffer-file-name)
