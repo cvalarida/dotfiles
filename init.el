@@ -345,10 +345,7 @@ There are two things you can do about this warning:
   :ensure t)
 
 (use-package groovy-mode
-  :ensure t
-  :init
-  ;; Use 2-space indent
-  (lambda () (c-set-offset 'label 2)))
+  :ensure t)
 
 ;; Packages that add hooks to major modes
 (use-package add-node-modules-path
