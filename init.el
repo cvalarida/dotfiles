@@ -345,7 +345,9 @@ There are two things you can do about this warning:
   :ensure t)
 
 (use-package groovy-mode
-  :ensure t)
+  :ensure t
+  :init
+  (setq groovy-indent-offset 2))
 
 ;; Packages that add hooks to major modes
 (use-package add-node-modules-path
