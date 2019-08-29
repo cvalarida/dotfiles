@@ -103,6 +103,9 @@ There are two things you can do about this warning:
      "Window '%s' is normal")
    (current-buffer)))
 
+;; Set shell indentation
+(setq sh-indentation 2)
+
 ;; Configure ediff
 ;; From https://oremacs.com/2015/01/17/setting-up-ediff/
 (defmacro csetq (variable value)
