@@ -90,6 +90,19 @@ There are two things you can do about this warning:
           (kill-new file-name))
       (error "Buffer not visiting a file"))))
 
+;; Toggle window dedication
+;; From https://stackoverflow.com/questions/43765/pin-emacs-buffers-to-windows-for-cscope
+(defun toggle-window-dedicated ()
+  "Toggle whether the current active window is dedicated or not."
+  (interactive)
+  (message
+   (if (let (window (get-buffer-window (current-buffer)))
+	 (set-window-dedicated-p window
+				 (not (window-dedicated-p window))))
+       "Window '%s' is dedicated"
+     "Window '%s' is normal")
+   (current-buffer)))
+
 ;; Configure ediff
 ;; From https://oremacs.com/2015/01/17/setting-up-ediff/
 (defmacro csetq (variable value)
@@ -110,19 +123,6 @@ There are two things you can do about this warning:
   (define-key ediff-mode-map "k" 'ediff-previous-difference))
 (add-hook 'ediff-mode-hook 'ediff-setup-hook)
 
-;; Toggle window dedication
-
-;; From https://stackoverflow.com/questions/43765/pin-emacs-buffers-to-windows-for-cscope
-(defun toggle-window-dedicated ()
-  "Toggle whether the current active window is dedicated or not."
-  (interactive)
-  (message
-   (if (let (window (get-buffer-window (current-buffer)))
-	 (set-window-dedicated-p window
-				 (not (window-dedicated-p window))))
-       "Window '%s' is dedicated"
-     "Window '%s' is normal")
-   (current-buffer)))
 
 ;; Set up use-package
 (unless (package-installed-p 'use-package)
