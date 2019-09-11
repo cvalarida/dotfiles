@@ -39,7 +39,7 @@ There are two things you can do about this warning:
     ("54f2d1fcc9bcadedd50398697618f7c34aceb9966a6cbaa99829eb64c0c1f3ca" "04232a0bfc50eac64c12471607090ecac9d7fd2d79e388f8543d1c5439ed81f5" default)))
  '(package-selected-packages
    (quote
-    (groovy-mode git-link yaml-mode go-mode typescript-mode add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
+    (cider clojure-mode groovy-mode git-link yaml-mode go-mode typescript-mode add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -321,6 +321,9 @@ There are two things you can do about this warning:
   (define-key yas-minor-mode-map (kbd "M-/") yas-maybe-expand)
   (yas-global-mode 1))
 
+(use-package cider
+  :ensure t)
+
 ;; Major modes
 (use-package js2-mode
   :ensure t
@@ -352,6 +355,9 @@ There are two things you can do about this warning:
   :init
   (setq groovy-indent-offset 2))
 
+(use-package clojure-mode
+  :ensure t)
+
 ;; Packages that add hooks to major modes
 (use-package add-node-modules-path
   :ensure t
@@ -370,9 +376,20 @@ There are two things you can do about this warning:
   :ensure t
   :commands lsp
   :diminish lsp-mode "LSP"
+  :config
+  (add-to-list 'lsp-language-id-configuration '(clojure-mode . "clojure-mode"))
   :init
   ;; Can't use :hook here because that'll run `lsp-mode`, not `lsp`
-  (dolist (hook '(js2-mode-hook rjsx-mode-hook typescript-mode-hook))
+  (dolist (hook
+	   ;; JavaScript / TypeScript
+	   '(js2-mode-hook
+	     rjsx-mode-hook
+	     typescript-mode-hook
+	     ;; Clojure
+	     ;; https://github.com/snoe/clojure-lsp#installation
+	     clojure-mode-hook
+	     clojurec-mode-hook
+	     clojurescript-mode-hook))
     (add-hook hook #'lsp))
   (add-hook 'lsp-mode-hook #'(lambda ()
 			       (define-key evil-normal-state-map (kbd "SPC g d") 'lsp-find-implementation)
