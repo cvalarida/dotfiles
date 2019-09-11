@@ -180,6 +180,8 @@ There are two things you can do about this warning:
   (which-key-add-key-based-replacements "SCP f" "files")
   (define-key evil-normal-state-map (kbd "SPC f f") 'helm-find-files)
   (define-key evil-normal-state-map (kbd "SPC f y") 'yank-buffer-file-name)
+  (define-key evil-normal-state-map (kbd "<M-left>") 'previous-buffer)
+  (define-key evil-normal-state-map (kbd "<M-right>") 'next-buffer)
   (evil-mode))
 
 (use-package magit
