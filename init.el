@@ -36,7 +36,7 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("54f2d1fcc9bcadedd50398697618f7c34aceb9966a6cbaa99829eb64c0c1f3ca" "04232a0bfc50eac64c12471607090ecac9d7fd2d79e388f8543d1c5439ed81f5" default)))
+    ("cdb4ffdecc682978da78700a461cdc77456c3a6df1c1803ae2dd55c59fa703e3" "54f2d1fcc9bcadedd50398697618f7c34aceb9966a6cbaa99829eb64c0c1f3ca" "04232a0bfc50eac64c12471607090ecac9d7fd2d79e388f8543d1c5439ed81f5" default)))
  '(package-selected-packages
    (quote
     (cider clojure-mode groovy-mode git-link yaml-mode go-mode typescript-mode add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
@@ -60,6 +60,10 @@ There are two things you can do about this warning:
 (scroll-bar-mode 0)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
+
+;; Global key bindings
+(global-set-key (kbd "<M-left>") 'previous-buffer)
+(global-set-key (kbd "<M-right>") 'next-buffer)
 
 ;; Set up key bindings for mode maps that aren't a part of a package.
 (defun set-up-org-mode-map ()
@@ -171,7 +175,7 @@ There are two things you can do about this warning:
   (which-key-add-key-based-replacements "SPC b" "buffers")
   (define-key evil-normal-state-map (kbd "SPC b n") 'next-buffer)
   (define-key evil-normal-state-map (kbd "SPC b p") 'previous-buffer)
-  (define-key evil-normal-state-map (kbd "SPC b d") 'evil-delete-buffer)
+  (define-key evil-normal-state-map (kbd "SPC b d") 'kill-this-buffer)
   (define-key evil-normal-state-map (kbd "SPC w") evil-window-map)
   (which-key-add-key-based-replacements "SPC w" "window")
   (define-key evil-normal-state-map (kbd "SPC w /") 'evil-window-vsplit) ;; Necessary?
@@ -180,8 +184,6 @@ There are two things you can do about this warning:
   (which-key-add-key-based-replacements "SCP f" "files")
   (define-key evil-normal-state-map (kbd "SPC f f") 'helm-find-files)
   (define-key evil-normal-state-map (kbd "SPC f y") 'yank-buffer-file-name)
-  (define-key evil-normal-state-map (kbd "<M-left>") 'previous-buffer)
-  (define-key evil-normal-state-map (kbd "<M-right>") 'next-buffer)
   (evil-mode))
 
 (use-package magit
@@ -310,6 +312,7 @@ There are two things you can do about this warning:
   (set-face-attribute
    'aw-leading-char-face nil :height 3.0)
   (define-key evil-motion-state-map (kbd "SPC TAB") 'ace-window)
+  (define-key evil-motion-state-map (kbd "SPC s") 'ace-swap-window)
   ;; ace-window requires avy, so set up avy keys here
   (define-key evil-motion-state-map (kbd "SPC j j") 'evil-avy-goto-char-timer))
 
@@ -394,6 +397,7 @@ There are two things you can do about this warning:
 	     clojurescript-mode-hook))
     (add-hook hook #'lsp))
   (add-hook 'lsp-mode-hook #'(lambda ()
+			       (define-key evil-normal-state-map (kbd "SPC r r") 'lsp-rename)
 			       (define-key evil-normal-state-map (kbd "SPC g d") 'lsp-find-implementation)
 			       (define-key evil-normal-state-map (kbd "SPC g r") 'lsp-find-references))))
 
@@ -402,31 +406,21 @@ There are two things you can do about this warning:
   :diminish js2-refactor-mode
   :config
   (dolist (hook '(js2-mode-hook rjsx-mode-hook))
-    (add-hook hook #'js2-refactor-mode))
-  (which-key-add-key-based-replacements "SPC r" "refactor")
-  ;; Turns out this map is completely empty
-  ;; TODO: Fill it out
-  (define-key evil-normal-state-map (kbd "SPC r") js2-refactor-mode-map))
+    (add-hook hook #'js2-refactor-mode)))
 
 ;; Probably useful packages:
 ;; powerline
 
 ;; Things I want to do:
-;; Show directory contents when typing out paths (import something from '../../')
-;;   Of course this works when I type out the path from this file...:confused:
 ;; Electric brackets
 ;; Paste with proper indentation
-;; More sensible default window layouts
-;;   (done...somehow?)
-;; Open *special* buffers down at the bottom (or at least some)
-;;   (Waiting to see if I'm okay with the way it is now)
 ;; Show how many matches there are to a search pattern
 ;; daemon mode
 ;; Hide helm buffers from switch-to-buffer, previous-buffer, and next-buffer
 
 ;; Things to look into later
 ;; evil-leader
-;; Look at Frontmacs config
+;; Frontmacs config
 
 (provide 'init)
 ;;; init.el ends here
