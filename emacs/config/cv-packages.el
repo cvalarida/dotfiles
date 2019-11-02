@@ -277,12 +277,5 @@
 			       (evil-define-key 'normal 'lsp-mode-map (kbd "SPC g d") 'lsp-find-implementation)
 			       (evil-define-key 'normal 'lsp-mode-map (kbd "SPC g r") 'lsp-find-references))))
 
-(use-package js2-refactor
-  :ensure t
-  :diminish js2-refactor-mode
-  :config
-  (dolist (hook '(js2-mode-hook rjsx-mode-hook))
-    (add-hook hook #'js2-refactor-mode)))
-
 (provide 'cv-packages)
 ;;; cv-packages.el ends here
