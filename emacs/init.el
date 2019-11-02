@@ -53,20 +53,7 @@ There are two things you can do about this warning:
 (require 'cv-settings)
 (require 'cv-functions)
 (require 'cv-packages)
-
-;; Probably useful packages:
-;; powerline
-
-;; Things I want to do:
-;; Electric brackets
-;; Paste with proper indentation
-;; Show how many matches there are to a search pattern
-;; daemon mode
-;; Hide helm buffers from switch-to-buffer, previous-buffer, and next-buffer
-
-;; Things to look into later
-;; evil-leader
-;; Frontmacs config
+(require 'cv-experiments)
 
 (provide 'init)
 ;;; init.el ends here
