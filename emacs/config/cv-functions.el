@@ -28,5 +28,21 @@
      "Window '%s' is normal")
    (current-buffer)))
 
+(defun log-this ()
+  "Insert a console.log() for the symbol under the point.
+
+TODO: Make this useful for more than just JavaScript."
+  (interactive)
+  (let ((thing-to-log
+	 (if (use-region-p)
+	     (buffer-substring-no-properties (region-beginning) (region-end))
+	   (thing-at-point 'word))))
+    (save-excursion
+      (end-of-line)
+      (insert (if use-hard-newlines hard-newline "\n"))
+      (indent-according-to-mode)
+      (insert (concat "console.log('" thing-to-log ":', " thing-to-log ");"))
+    )))
+
 (provide 'cv-functions)
 ;;; cv-functions.el ends here

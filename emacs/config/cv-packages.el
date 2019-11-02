@@ -215,7 +215,9 @@
                 js2-indent-on-enter-key t
                 js2-global-externs (list "window" "module" "require" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "__dirname" "console" "JSON"))
   (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (add-hook 'js2-mode-hook #'hs-minor-mode))
+  (add-hook 'js2-mode-hook #'hs-minor-mode)
+  (evil-define-key 'normal 'js2-mode-map (kbd "SPC l") 'log-this)
+  )
 
 (use-package rjsx-mode
   :ensure t)

@@ -21,18 +21,5 @@
 
 ;;; Code:
 
-;; TODO:
-;; - Log a region
-(defun log-this ()
-  "Insert a console.log() for the symbol under the point."
-  (interactive)
-  (let ((thing-to-log (thing-at-point 'word)))
-    (save-excursion
-      (end-of-line)
-      (insert (if use-hard-newlines hard-newline "\n"))
-      (indent-according-to-mode)
-      (insert (concat "console.log('" thing-to-log ":', " thing-to-log ");"))
-    )))
-
 (provide 'cv-experiments)
 ;;; cv-experiments.el ends here
