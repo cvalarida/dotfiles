@@ -273,9 +273,9 @@
 	     clojurescript-mode-hook))
     (add-hook hook #'lsp))
   (add-hook 'lsp-mode-hook #'(lambda ()
-			       (define-key evil-normal-state-map (kbd "SPC r r") 'lsp-rename)
-			       (define-key evil-normal-state-map (kbd "SPC g d") 'lsp-find-implementation)
-			       (define-key evil-normal-state-map (kbd "SPC g r") 'lsp-find-references))))
+			       (evil-define-key 'normal 'lsp-mode-map (kbd "SPC r r") 'lsp-rename)
+			       (evil-define-key 'normal 'lsp-mode-map (kbd "SPC g d") 'lsp-find-implementation)
+			       (evil-define-key 'normal 'lsp-mode-map (kbd "SPC g r") 'lsp-find-references))))
 
 (use-package js2-refactor
   :ensure t
