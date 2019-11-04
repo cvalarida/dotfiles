@@ -28,6 +28,10 @@
      "Window '%s' is normal")
    (current-buffer)))
 
+(defun region-text ()
+  "Return the text in the region."
+  (buffer-substring-no-properties (region-beginning) (region-end)))
+
 (defun log-this ()
   "Insert a console.log() for the symbol under the point.
 
@@ -35,7 +39,7 @@ TODO: Make this useful for more than just JavaScript."
   (interactive)
   (let ((thing-to-log
 	 (if (use-region-p)
-	     (buffer-substring-no-properties (region-beginning) (region-end))
+	     (region-text)
 	   (thing-at-point 'word))))
     (save-excursion
       (end-of-line)
