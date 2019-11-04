@@ -21,5 +21,17 @@
 
 ;;; Code:
 
+(defun rotate-args ()
+  "Rotate the highlighted arguments."
+  (interactive)
+  (let ((original-text (region-text))))
+  ;; Split up the text into a list of arguments
+  ;; Take the first item in the list, and put it in the back
+  ;; Replace the region with the new argument order
+  ;; Phase two: Handle multi-line regions by keeping track of the position of the beginning of each argument
+  ;;  This could get tricky when handling multiple lines vs single line
+  )
+
+
 (provide 'cv-experiments)
 ;;; cv-experiments.el ends here
