@@ -74,7 +74,8 @@
 (use-package git-link
   :ensure t
   :config
-  (setq git-link-default-branch "master"))
+  (setq git-link-default-branch "master")
+  (define-key evil-normal-state-map (kbd "SPC g l") 'git-link))
 
 (use-package evil-surround
   :ensure t
@@ -158,17 +159,11 @@
   :config
   (push 'company-lsp company-backends))
 
-(use-package org-brain
-  :ensure t
-  :init
-  (setq org-brain-path "~/.emacs.d/org-brain-files/")
-  (with-eval-after-load 'evil
-    (evil-set-initial-state 'org-brain-visualize-mode 'emacs)))
-
 (use-package eyebrowse
   :ensure t
   :config
   (eyebrowse-setup-evil-keys)
+  (global-set-key (kbd "C-x w") 'eyebrowse-create-window-config)
   (eyebrowse-mode))
 
 (use-package winner
@@ -223,7 +218,13 @@
   :ensure t)
 
 (use-package typescript-mode
-  :ensure t)
+  :ensure t
+  :init
+  ;; Add hook to select tslint as the checker for typescript buffers
+  ;; AFTER adding the node_modules to the path so it can actually find
+  ;; and enable the checker
+  ;; (add-hook 'typescript-mode-hook #'(lambda () (flycheck-select-checker 'typescript-tslint)))
+  )
 
 (use-package go-mode
   :ensure t)
@@ -243,14 +244,15 @@
 (use-package add-node-modules-path
   :ensure t
   :init
-  (dolist (hook '(js2-mode-hook rjsx-mode-hook))
-    (add-hook hook #'add-node-modules-path)))
+  (dolist (hook '(js2-mode-hook rjsx-mode-hook typescript-mode-hook))
+    (add-hook hook #'add-node-modules-path))
+  )
 
 (use-package prettier-js
   :ensure t
   :diminish prettier-js-mode
   :init
-  (dolist (hook '(js2-mode-hook rjsx-mode-hook))
+  (dolist (hook '(js2-mode-hook rjsx-mode-hook typescript-mode-hook))
     (add-hook hook 'prettier-js-mode)))
 
 (use-package lsp-mode

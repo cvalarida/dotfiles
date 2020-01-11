@@ -37,9 +37,10 @@ There are two things you can do about this warning:
  '(custom-safe-themes
    (quote
     ("cdb4ffdecc682978da78700a461cdc77456c3a6df1c1803ae2dd55c59fa703e3" "54f2d1fcc9bcadedd50398697618f7c34aceb9966a6cbaa99829eb64c0c1f3ca" "04232a0bfc50eac64c12471607090ecac9d7fd2d79e388f8543d1c5439ed81f5" default)))
+ '(org-agenda-files (quote ("~/organizer.org")))
  '(package-selected-packages
    (quote
-    (cider clojure-mode groovy-mode git-link yaml-mode go-mode typescript-mode add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
+    (string-inflection helm-posframe evil-owl posframe evil-org cider clojure-mode groovy-mode git-link yaml-mode go-mode typescript-mode add-node-modules-path yasnippet company ace-window eyebrowse org-brain company-lsp js2-refactor lsp-mode prettier-js flycheck zenburn-theme zenburn evil-nerd-commenter evil-magit helm-rg dimmer which-key helm-projectile projectile diminish rjsx-mode js2-mode helm evil-smartparens evil-surround evil-escape evil evil-mode magit use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
